@@ -1,0 +1,136 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Piedra, Papel o Tijeras</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            background-attachment: fixed;
+            margin: 0%;
+            height: 100vh;
+            color: #ffffff;
+        }
+        .choices {
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .choices button {
+            width: 140px; /* el ancho del botón */
+            height: 140px; /* el alto al igual al ancho para hacerlo circular */
+            border-radius: 50%; /* hace que el botón sea circular */
+            border: none; /* sin borde */
+            background-color: #fff; /* fondo blanco para resaltar el ícono */
+            cursor: pointer; /* cambia el cursor al pasar sobre el botón */
+            margin: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column; /* coloca el texto debajo del ícono */
+            padding: 10px;
+            gap: 8px;
+            transition: transform 0.2s; /* animación suave al hacer clic */
+        }
+        .choices button:hover {
+            transform: scale(1.1); /* agranda el botón al pasar el mouse */
+        }
+        .choices button img {
+            width: 100px; /* ajusta según que tan grande quieras el ícono */
+            height: 100px;
+            display: block;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .choices button span {
+            font-size: 16px; /* tamaño del texto debajo del ícono */
+            font-weight: bold; /* texto en negrita */
+            color: #333; /* color del texto */
+            text-transform: capitalize; /* capitaliza la primera letra en mayúscula automáticamente */
+            
+        }
+        .score {
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+
+        }
+    
+
+    </style>
+</head>
+<body>
+    <h1>Juego Piedra, Papel o Tijeras</h1>
+    <div class="choices">
+        <button onclick="play('piedra')">
+            <img src="https://img.icons8.com/color/512/rock.png" alt="piedra"> <span>piedra</span>
+        </button>
+        <button onclick="play('papel')">
+            <img src="https://img.icons8.com/color/512/paper.png" alt="papel"> <span></span>papel</span>
+        </button>
+        <button onclick="play('tijeras')">
+            <img src="https://img.icons8.com/color/512/scissors.png" alt="tijeras"> <span></span>tijeras</span>
+        </button>
+    </div>
+    <div class="result" id="result"></div>
+    <div class="score">
+    <div id="score-board" style="margin-top: 30px; font-size: 24px; font-weight: bold;" background-color: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px; display: inline-block;"> usuario: <span id="user-score" style="color: #4ade80;">0</span> VS
+    computadora: <span id="computer-score" style="color: #f87171;">0</span>
+    Empates: <span id="draw-score">0</span></div>
+    <button id="reset-btn" onclick="resetGame()">Reiniciar Juego</button>
+<script
+src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        let userpoints = 0;
+        let computerpoints = 0;
+        let drawpoints = 0;
+
+        function play(userChoice) {
+            const choices = ['piedra', 'papel', 'tijeras'];
+            const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+            let result = '';
+
+            if (userChoice === computerChoice) {
+                result = 'Empate!';
+                drawpoints++;
+                document.getElementById('draw-score').innerText = drawpoints;
+            } else if (
+                (userChoice === 'piedra' && computerChoice === 'tijeras') ||
+                (userChoice === 'papel' && computerChoice === 'piedra') ||
+                (userChoice === 'tijeras' && computerChoice === 'papel')
+            ) {
+                result = '¡Ganaste!';
+                userpoints++;
+                document.getElementById('user-score').innerText = userpoints;
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+                new Audio('ganaste.mp3').play();
+            } else {
+                result = 'Perdiste!';
+                computerpoints++;
+                document.getElementById('computer-score').innerText = computerpoints;
+                new Audio('perdiste.mp3').play();
+            }
+
+            document.getElementById('result').innerText = ` Elección del usuario: ${userChoice} VS Elección de la computadora: ${computerChoice} = Resultado: ${result}`;
+        }
+        function resetGame() {
+            userpoints = 0;
+            computerpoints = 0;
+            drawpoints = 0;
+            document.getElementById('user-score').innerText = userpoints;
+            document.getElementById('computer-score').innerText = computerpoints;
+            document.getElementById('draw-score').innerText = drawpoints;
+            document.getElementById('result').innerText = '¡Juego reiniciado!';
+        }
+    </script>
+</html>
